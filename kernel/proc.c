@@ -166,6 +166,20 @@ freeproc(struct proc *p)
   p->state = UNUSED;
 }
 
+void
+calUnproc(uint64 *cnt)
+{
+	struct proc *p;
+	*cnt = 0;
+	for(p = proc; p < &proc[NPROC]; p++)
+	{
+		if(p->state != UNUSED)
+		{
+			*cnt += 1;
+		}
+	}
+}
+
 // Create a user page table for a given process,
 // with no user memory, but with trampoline pages.
 pagetable_t
@@ -291,6 +305,9 @@ fork(void)
 
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
+  
+  // copy trace mask
+  np->mask = p->mask;
 
   // Cause fork to return 0 in the child.
   np->trapframe->a0 = 0;

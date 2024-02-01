@@ -1,6 +1,6 @@
 # Lab1 util: Unix utilities
 ## sleep.c
-require:
+### require:
 利用 sleep
 ```
 $ make qemu
@@ -10,7 +10,7 @@ $ sleep 10
 (nothing happens for a little while)
 $
 ```
-code:
+### code:
 ```c
 #include "kernel/types.h"
 #include "kernel/stat.h"
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 }
 ```
 ## pingpong.c
-require:
+### require:
 利用 pipe 和 fork
 The parent should send a byte to the child; the child should print "<pid>: received ping", where <pid> is its process ID, write the byte on the pipe to the parent, and exit; the parent should read the byte from the child, print "<pid>: received pong", and exit.
 ```
@@ -49,9 +49,9 @@ $ pingpong
 3: received pong
 $
 ```
-note:
+### note:
 要記得 close no use pipe 和 wait  
-code:
+### code:
 ```c
 #include "kernel/types.h"
 #include "kernel/stat.h"
@@ -113,7 +113,7 @@ int main(int argc, char const *argv[])
 }
 ```
 ## primes.c
-require:
+### require:
 利用 pipe 和 fork 實現輸出質數到35  
 <br />
 <img src="./picture/primes.JPG" width="50%" align=left/> 
@@ -135,9 +135,9 @@ prime 29
 prime 31
 $
 ```
-note:
+### note:
 要記得 close no use pipe
-code:
+### code:
 ```c
 #include "kernel/types.h"
 #include "kernel/stat.h"
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
 }
 ```
 ## find.c
-require:
+### require:
 ```
 $ make qemu
 ...
@@ -238,9 +238,9 @@ $ find . b
 ./a/b
 $
 ```
-note:
+### note:
 需要知道 unix 檔案的觀念
-code:
+### code:
 ```c
 #include "kernel/types.h"
 #include "kernel/stat.h"
@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
 }
 ```
 ## xargs.c
-require:
+### require:
 利用 exec
 ```
 $ make qemu
@@ -343,7 +343,7 @@ $ echo hello too | xargs echo bye
 bye hello too
 $
 ```
-code:
+### code:
 ```c
 #include "kernel/types.h"
 #include "kernel/stat.h"

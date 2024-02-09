@@ -86,6 +86,7 @@ calFreemem(uint64 *cnt)
 {
 	struct run *r = kmem.freelist;
 	*cnt = 0;
+	// empty will be not NULL because it will fill with junk
 	while(r)
 	{
 		(*cnt) += 4096;

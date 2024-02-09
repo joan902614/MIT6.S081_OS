@@ -113,10 +113,12 @@ sys_sysinfo(void)
 {
 	struct proc *p = myproc();
 	uint64 addr;
+	// get address stored in info parameter(pointor to sysinfo) 
 	if(argaddr(0, &addr) < 0)
 		return -1;
 	struct sysinfo info;
 	calFreemem(&(info.freemem));
 	calUnproc(&(info.nproc));
+	// copy kernal varible vaule to user space
 	return copyout(p->pagetable, addr, (char *)&info, sizeof(info));
 }	

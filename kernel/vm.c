@@ -340,6 +340,35 @@ uvmclear(pagetable_t pagetable, uint64 va)
   *pte &= ~PTE_U;
 }
 
+// print a page table
+#ifdef LAB_PGTBL
+void
+vmprintLevel(pagetable_t pagetable, int level)
+{
+	char *level_point[3] = {".. .. ..", ".. ..", ".."};
+	for(int i = 0; i < 512; i++)
+	{
+		// page table entry
+		pte_t pte = pagetable[i];
+		if(pte & PTE_V)
+		{
+			// next level pagetable must be physical adress
+			uint64 child = PTE2PA(pte);
+			printf("%s%d: pte %p pa %p\n", level_point[level], i, pte, child);
+			if(level != 0)
+				// child is adress, so need to change to pointer
+				vmprintLevel((pagetable_t)child, level - 1);
+		}
+	}
+}
+void
+vmprint(pagetable_t pagetable)
+{
+	printf("page table %p\n", pagetable);
+	vmprintLevel(pagetable, 2);	
+}
+#endif
+
 // Copy from kernel to user.
 // Copy len bytes from src to virtual address dstva in a given page table.
 // Return 0 on success, -1 on error.

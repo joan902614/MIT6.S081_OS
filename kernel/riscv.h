@@ -1,3 +1,12 @@
+#ifdef LAB_TRAPS
+static inline uint64
+r_fp(void)
+{
+  uint64 x;
+  asm volatile("mv %0, s0" : "=r" (x) );
+  return x;
+}
+#endif
 // which hart (core) is this?
 static inline uint64
 r_mhartid()

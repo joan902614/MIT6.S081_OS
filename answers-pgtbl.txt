@@ -1,0 +1,4 @@
+1. all syscall need to be copyout from kernel
+2. page 0: data, text 
+	 page 1: guard page, can't be used
+	 page 2: stack 

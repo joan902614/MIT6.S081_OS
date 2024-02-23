@@ -75,8 +75,6 @@ sys_sleep(void)
   return 0;
 }
 
-
-#ifdef LAB_PGTBL
 int
 sys_pgaccess(void)
 {
@@ -88,27 +86,30 @@ sys_pgaccess(void)
   int num;
 	if(argaddr(0, &va_pg) | argint(1, &num) | argaddr(2, &va_mask))
 		return -1;
-	if(num > 32)
+	// integter at most 32 bit
+	// user va at most MAXVA
+	if(num < 0 || num > 32 || va_pg > MAXVA)
 		return -1;
 	// D and A is auto set by hardware 
 	for(int i = 0; i < num; i++)
 	{
+		// find leaf pte for every page
 		if((pte = walk(p->pagetable, va_pg + PGSIZE * i, 0)))
 		{
 			if(*pte & PTE_A)
 			{
 				mask |= (1 << i);
-				*pte &= ~PTE_A;
+				*pte &= ~PTE_A;	// set access bit to 0
 			}
 		}
 		else
 			return -1;
 	}
+	// let buffer copy back to user
 	if(copyout(p->pagetable, va_mask, (char *)&mask, sizeof(mask)) < 0)
 		return -1;
 	return 0;
 }
-#endif
 
 uint64
 sys_kill(void)

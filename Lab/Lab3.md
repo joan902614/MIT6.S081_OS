@@ -4,7 +4,6 @@ Require:
 By read-only page at USYSCALL(a VA defined in memlayout.h), add new syscall ugetpid() speed up getpid() 
 process memory configuration:
 
-|:---------:|
 | trampoline |
 | trapframe |
 | usyscall |

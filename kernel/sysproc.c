@@ -100,13 +100,6 @@ sys_uptime(void)
 uint64
 sys_sigalarm(void)
 {	
-	// add proc struct
-	// inital now_tick
-	// syscall
-	// store argument to process struct
-	// timer interr += 1 nowtick
-	// when ariived change spec to pred fun
-			
 	struct proc *p = myproc();
 	if(argint(0, &p->ticks) || argaddr(1, &p->handler))
 		return -1;
@@ -116,11 +109,8 @@ sys_sigalarm(void)
 uint64
 sys_sigreturn(void)
 {
-	// system call inital tick
-	// interrupt
-	// store origin register then jump to handler
-	// trap by system call restore register
 	struct proc *p = myproc();
+	
 	p->trapframe->epc = p->ogf.epc;
 	p->trapframe->ra = p->ogf.ra;	
 	p->trapframe->sp = p->ogf.sp;	
@@ -153,6 +143,7 @@ sys_sigreturn(void)
 	p->trapframe->t4 = p->ogf.t4;	
 	p->trapframe->t5 = p->ogf.t5;	
 	p->trapframe->t6 = p->ogf.t6;
+	// start calculate tick again
 	p->now_ticks = 0;	
 	return 0;
 }

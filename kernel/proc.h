@@ -106,9 +106,9 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-	int ticks;									 // sysalarm
-	uint64 handler;					 		 // sysalarm
+	int ticks;									 // sysalarm arg
+	uint64 handler;					 		 // sysalarm arg
 	int now_ticks;							 // record number of tick since last call
 	int in; 										 // in handler or not
-	struct trapframe ogf; 			 // origin trapframe 
+	struct trapframe ogf; 			 // origin trapframe  not handler
 };

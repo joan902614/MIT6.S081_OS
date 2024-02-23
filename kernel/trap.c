@@ -82,6 +82,7 @@ usertrap(void)
 		p->now_ticks += 1;
 		if(p->now_ticks == p->ticks)
 		{
+			// store register before jump to handler
 			p->ogf.epc = p->trapframe->epc;
 			p->ogf.ra = p->trapframe->ra;
 			p->ogf.sp = p->trapframe->sp;
@@ -114,7 +115,7 @@ usertrap(void)
 			p->ogf.t4 = p->trapframe->t4;
 			p->ogf.t5 = p->trapframe->t5;
 			p->ogf.t6 = p->trapframe->t6;
-			
+			// set pc to handler
 			p->trapframe->epc = p->handler;
 		}
     yield();

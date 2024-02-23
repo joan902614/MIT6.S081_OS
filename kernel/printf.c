@@ -133,16 +133,15 @@ printfinit(void)
   pr.locking = 1;
 }
 
-#ifdef LAB_TRAPS
 void
 backtrace(void)
 {
 	uint64 fp = r_fp(); // fp is the address in stack
 	printf("backtrace:\n");
+	// stack is one page
 	while(PGROUNDDOWN(fp) <= fp && fp < PGROUNDUP(fp))	
 	{
-		printf("%p\n", *(uint64 *)(fp - 8));
-		fp = *(uint64 *)(fp - 16);
+		printf("%p\n", *(uint64 *)(fp - 8));  // ra
+		fp = *(uint64 *)(fp - 16);					  // fp
 	}
 }
-#endif

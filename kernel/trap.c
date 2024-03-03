@@ -65,7 +65,21 @@ usertrap(void)
     intr_on();
 
     syscall();
-  } else if((which_dev = devintr()) != 0){
+  }
+	else if(r_scause() == 15) // store page fault
+	{
+		// find pte
+		// check COW flag
+		// create new pa area
+		// copy origin pa to new pa
+		// map new pa to pte
+ 		if(cowhandler(p->pagetable, r_stval()) < 0)
+		{
+			printf("usertrap: store page fault error\n");
+			p->killed = 1;
+		}
+	}
+	else if((which_dev = devintr()) != 0){
     // ok
   } else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);

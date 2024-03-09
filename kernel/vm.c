@@ -5,8 +5,7 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
-#include "spinlock.h"
-#include "proc.h"
+
 /*
  * the kernel's page table.
  */
@@ -316,7 +315,8 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
     if((*pte & PTE_V) == 0)
       panic("uvmcopy: page not present");
     pa = PTE2PA(*pte);
-		if(*pte & PTE_W)
+		
+		if(*pte & PTE_W)	// other case no need to become cow 
 		{
 			*pte = (*pte & (~PTE_W)) | PTE_COW;
     }
@@ -325,17 +325,11 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
       goto err;
     memmove(mem, (char*)pa, PGSIZE);
     if(mappages(new, i, PGSIZE, (uint64)mem, flags) != 0)*/
+		if(mappages(new, i, PGSIZE, pa, PTE_FLAGS(*pte)) != 0)
+      goto err;
 		acquire(&refs_lock);
 		refs_cnt[pa / PGSIZE]++;
 		release(&refs_lock);
-		//refs_cnt[(int)(uint64)pa / PGSIZE]++;
-		if(mappages(new, i, PGSIZE, pa, PTE_FLAGS(*pte)) != 0)
-		{
-			acquire(&refs_lock);
-			refs_cnt[pa / PGSIZE]--;
-			release(&refs_lock);
-      goto err;
-    }
   }
   return 0;
 
@@ -366,21 +360,14 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 {
 	uint64 n, va0, pa0;
   while(len > 0){
-    va0 = PGROUNDDOWN(dstva);
-		// because it use memove directly but not pgtable
-		// find pte
-		// check legal
-		// check if a COW page or not
-		// create new pa
-		// mappage
-		if(cowhandler(pagetable, va0) < 0)
-		{
-			//exit(1);
+		// because it use memove directly but not through pgtable
+		if(writevaildAndCowhandler(pagetable, dstva) < 0)
+			//exit(-1);
 			return -1;
-		}
+
+    va0 = PGROUNDDOWN(dstva);
     pa0 = walkaddr(pagetable, va0);
-		//if(pa0 == 0)
-			//return -1;
+
     n = PGSIZE - (dstva - va0);
     if(n > len)
       n = len;
@@ -392,38 +379,41 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
   }
   return 0;
 }
-int cowhandler(pagetable_t pagetable, uint64 va)
+int writevaildAndCowhandler(pagetable_t pagetable, uint64 va)
 {
 	pte_t *pte;
 	char *mem;
 	uint64 pa;
-	//struct proc *p = myproc();
-	if(va >= MAXVA)
+	
+	if(va >= MAXVA)	// check va of process vaild
 		return -1;
-	//if(va > p->sz)
-		//return -1;
-	if((pte = walk(pagetable, va, 0)) == 0)
+	if((pte = walk(pagetable, va, 0)) == 0)	// check pte vaild
 		return -1;
-	if(((*pte & PTE_V) == 0) || ((*pte & PTE_U) == 0))
+	if(((*pte & PTE_V) == 0) || ((*pte & PTE_U) == 0)) // check flag vaild
 		return -1;
-	if((*pte & PTE_COW) && ((*pte & PTE_W) == 0))
+	if((*pte & PTE_COW) && ((*pte & PTE_W) == 0)) // check COW
 	{
 		pa = PTE2PA(*pte);
-    //va = PGROUNDDOWN(va);
+    va = PGROUNDDOWN(va); // related to pgtable need to align
 		
+		// alloc new pa area if error then kill
 		if((mem = kalloc()) == 0)
 		{ 
-			return -1;
+			exit(-1);
+			//return -1;
 		}
 
+		// copy
 		memmove(mem, (char *)pa, PGSIZE);
+		// dereference old pa
 		kfree((char *)pa);
 
+		// update pte
 		*pte = PA2PTE(mem) | PTE_FLAGS(*pte);
 		*pte |= PTE_W;
 		*pte &= ~PTE_COW;
 	}
-	else if((*pte & PTE_W) == 0)
+	else if((*pte & PTE_W) == 0)	// check other write invaild
 		return -1;
 	return 0;
 }

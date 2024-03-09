@@ -73,7 +73,7 @@ usertrap(void)
 		// create new pa area
 		// copy origin pa to new pa
 		// map new pa to pte
- 		if(cowhandler(p->pagetable, r_stval()) < 0)
+ 		if(writevaildAndCowhandler(p->pagetable, r_stval()) < 0)
 		{
 			printf("usertrap: store page fault error\n");
 			p->killed = 1;

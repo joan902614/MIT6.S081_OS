@@ -157,7 +157,8 @@
     200000 gets, 4.322 seconds, 46274 gets/second
     ```
 * Tips:
-  ![image](<https://github.com/joan902614/MIT6.S081_OS/assets/132533584/fe71ebc9-47cf-4712-bd71-80d07c1b3e7f> =100x100)
+  <br />
+  <img src="./picture/thread_ph.JPG" width="30%" align=left/> 
   ```c
   pthread_mutex_t lock;            // declare a lock
   pthread_mutex_init(&lock, NULL); // initialize the lock

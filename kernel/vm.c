@@ -316,7 +316,7 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
       panic("uvmcopy: page not present");
     pa = PTE2PA(*pte);
 		
-		if(*pte & PTE_W)	// other case no need to become cow 
+		if(*pte & PTE_W)	// if is for other case no need to become cow 
 		{
 			*pte = (*pte & (~PTE_W)) | PTE_COW;
     }
@@ -325,17 +325,16 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
       goto err;
     memmove(mem, (char*)pa, PGSIZE);
     if(mappages(new, i, PGSIZE, (uint64)mem, flags) != 0)*/
-		if(mappages(new, i, PGSIZE, pa, PTE_FLAGS(*pte)) != 0)
+		if(mappages(new, i, PGSIZE, pa, PTE_FLAGS(*pte)) != 0)	// map child page entry to parent pa 
       goto err;
 		acquire(&refs_lock);
-		refs_cnt[pa / PGSIZE]++;
+		refs_cnt[pa / PGSIZE]++;	// add pa page entry
 		release(&refs_lock);
   }
   return 0;
 
  err:
-  //uvmunmap(new, 0, i / PGSIZE, 1);
-  uvmunmap(new, 0, i / PGSIZE, 0);
+  uvmunmap(new, 0, i / PGSIZE, 1);
   return -1;
 }
 
@@ -360,13 +359,11 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 {
 	uint64 n, va0, pa0;
   while(len > 0){
-		// because it use memove directly but not through pgtable
-		if(writevaildAndCowhandler(pagetable, dstva) < 0)
-			//exit(-1);
+		if(writevaildAndCowhandler(pagetable, dstva) < 0) // COW
 			return -1;
 
     va0 = PGROUNDDOWN(dstva);
-    pa0 = walkaddr(pagetable, va0);
+    pa0 = walkaddr(pagetable, va0); // new pa
 
     n = PGSIZE - (dstva - va0);
     if(n > len)
@@ -400,7 +397,6 @@ int writevaildAndCowhandler(pagetable_t pagetable, uint64 va)
 		if((mem = kalloc()) == 0)
 		{ 
 			exit(-1);
-			//return -1;
 		}
 
 		// copy

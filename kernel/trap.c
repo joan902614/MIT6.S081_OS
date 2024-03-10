@@ -68,11 +68,6 @@ usertrap(void)
   }
 	else if(r_scause() == 15) // store page fault
 	{
-		// find pte
-		// check COW flag
-		// create new pa area
-		// copy origin pa to new pa
-		// map new pa to pte
  		if(writevaildAndCowhandler(p->pagetable, r_stval()) < 0)
 		{
 			printf("usertrap: store page fault error\n");

@@ -55,14 +55,16 @@ kfree(void *pa)
 {
   struct run *r;
 	int p_refs;
-  if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
+
+  if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP) // check vaild
     panic("kfree");
 	
+	// decrease reference
 	acquire(&refs_lock);
 	p_refs = --refs_cnt[(uint64)pa / PGSIZE];
 	release(&refs_lock);
 	
-	if(!p_refs)
+	if(!p_refs) // referencr = 0 then release
 	{
 		// Fill with junk to catch dangling refs.
 		memset(pa, 1, PGSIZE);
@@ -89,6 +91,7 @@ kalloc(void)
 	if(r)
   {
 	  kmem.freelist = r->next;
+		// reference set to 1
 		acquire(&refs_lock);
 		refs_cnt[(uint64)r / PGSIZE] = 1;
   	release(&refs_lock);

@@ -1,4 +1,4 @@
-![image](https://github.com/joan902614/MIT6.S081_OS/assets/132533584/fe71ebc9-47cf-4712-bd71-80d07c1b3e7f)# Lab thread: Multithreading
+# Lab thread: Multithreading
 ## Uthread: switching between threads
 * Requirement:  
   * design the context switch mechanism for a user-level threading system.  
@@ -157,7 +157,7 @@
     200000 gets, 4.322 seconds, 46274 gets/second
     ```
 * Tips:
-  
+  ![image](<https://github.com/joan902614/MIT6.S081_OS/assets/132533584/fe71ebc9-47cf-4712-bd71-80d07c1b3e7f> =100x100)
   ```c
   pthread_mutex_t lock;            // declare a lock
   pthread_mutex_init(&lock, NULL); // initialize the lock

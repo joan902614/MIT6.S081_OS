@@ -1,0 +1,5 @@
+(in Using thread)
+Q.
+Why are there missing keys with 2 threads, but not with 1 thread? Identify a sequence of events with 2 threads that can lead to a key being missing.
+A.
+when hash value the same, two different key will create a node and pointer to table[i] and then store in table[i]. However, the table[i] only can store one of them.

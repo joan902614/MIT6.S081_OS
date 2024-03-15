@@ -143,7 +143,7 @@
   * parallel programming with threads and locks using a hash table  
   * The argument to ph specifies the number of threads that execute put and get operations on the the hash table.  
   * x keys missing indicate that a large number of keys that should have been in the hash table are not there. That is, the puts were supposed to add those keys to the hash table, but something went wrong in two or more thread  
-  * keep some put operations run in parallel while maintaining correctness.
+  * keep some put operations run in parallel while maintaining correctness and a least to achieve 1.25 speed up
     ```
     $ make ph
     $ ./ph 1

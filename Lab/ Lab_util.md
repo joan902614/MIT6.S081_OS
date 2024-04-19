@@ -405,3 +405,5 @@ int main(int argc, char *argv[])
         exit(0);
 }
 ```
+## result
+![util](https://github.com/joan902614/MIT6.S081_OS/assets/132533584/44d04e6d-02a1-4e0f-8e00-80ccfd799ee3)

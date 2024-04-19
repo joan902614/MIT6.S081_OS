@@ -188,3 +188,5 @@ sys_sysinfo(void)
         return copyout(p->pagetable, addr, (char *)&info, sizeof(info));
 }
 ```
+## result
+![syscall](https://github.com/joan902614/MIT6.S081_OS/assets/132533584/48bd3e92-c88a-48ed-abbb-3733f5af6400)

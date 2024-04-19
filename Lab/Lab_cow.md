@@ -220,3 +220,5 @@
         return 0;
      }
      ```
+## result
+![cow](https://github.com/joan902614/MIT6.S081_OS/assets/132533584/b528a13e-f783-4664-b5dd-d7cf721d1d45)

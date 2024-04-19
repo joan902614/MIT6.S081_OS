@@ -266,3 +266,5 @@ Step:
    page 0: data, text  
    page 1: guard page, can't be used  
    page 2: stack 
+## result
+![pgtbl](https://github.com/joan902614/MIT6.S081_OS/assets/132533584/24ab4dc8-f09c-42eb-b0f6-a818824f93a1)

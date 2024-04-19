@@ -226,3 +226,5 @@
        pthread_mutex_unlock(&bstate.barrier_mutex);
      }
      ```
+## result
+![thread](https://github.com/joan902614/MIT6.S081_OS/assets/132533584/2ad5b18e-0051-41db-bcd1-93812b856a13)

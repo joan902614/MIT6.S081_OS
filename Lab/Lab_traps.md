@@ -286,3 +286,5 @@ jump origin code execute place
         return 0;
     }
     ```
+## result
+![trap](https://github.com/joan902614/MIT6.S081_OS/assets/132533584/9c162129-ae16-482d-8777-28d5fc925b81)
